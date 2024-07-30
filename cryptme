@@ -1,0 +1,38 @@
+#!/bin/sh
+
+# $1 - folder/file
+# $2 - password
+
+# Check if file/folder exist
+# Check if password is not empty
+
+if ! [ -d "$1" ] && ! [ -f "$1" ]; then
+    printf "error: need valid file or folder\n"
+    exit 1
+fi
+
+if [ -z "$2" ]; then
+    printf "error: need a password\n"
+    exit 1
+fi
+
+
+# Compressing
+7z a \
+  -t7z -m0=lzma2 -mx=9 -mfb=64 \
+  -md=32m -ms=on -mhe=on -p"$2" \
+   archive.7z "$1"
+
+
+hashname="$(sha256sum archive.7z)"
+hash="$(echo "$hashname" | cut -d ' ' -f1)"
+
+
+# Output
+printf "%s %s\n" "$hash" "$1" >> file_list.txt
+
+
+# Prevent overwrite of compressed file
+mv archive.7z "$(echo "$hashname" | cut -d ' ' -f1)"
+
+

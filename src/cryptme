@@ -1,10 +1,16 @@
 #!/bin/sh
 
+# Need to clean variables name
+
 # $1 - folder/file
 # $2 - password
 
 # Check if file/folder exist
 # Check if password is not empty
+
+
+version=0.1
+
 
 if ! [ -d "$1" ] && ! [ -f "$1" ]; then
     printf "error: need valid file or folder\n"
